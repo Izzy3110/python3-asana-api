@@ -10,7 +10,11 @@ if __name__ == '__main__':
     pat = os.environ.get('ASANA_PAT')
     key_length = 4096
 
-    keys = Keys(key_file, input_pass=input_pass, key_length=4096)
+    keys = Keys(
+        key_file=key_file,
+        input_pass=input_pass,
+        key_length=key_length
+    )
 
     encrypted_pat = keys.save_encrypted_pat(pat=pat)
     test_ok = str(keys.get_decrypted_pat(encrypted_pat)) == str(pat)
