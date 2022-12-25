@@ -27,7 +27,7 @@ if __name__ == '__main__':
     input_pass = os.environ.get('KEY_PASSWORD', "Key1Pass!2%$")
     key_file = os.environ.get('KEY_FILENAME', 'mykey.pem')
     pat = os.environ.get('ASANA_PAT')
-
+    print("pat: "+str(pat))
     key_length = 4096
     keys = Keys(
         key_file=key_file,
