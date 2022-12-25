@@ -5,6 +5,7 @@ import asana
 from wyl.api.asana.projects import Projects
 from wyl.api.asana.workspacs import Workspaces
 from wyl.api.asana.user import User
+from pathlib import Path
 
 
 class AsanaAPI(object):
@@ -43,7 +44,11 @@ class AsanaAPI(object):
         print(cwd_1)
 
         if "api." + self.provider_name in config.keys():
-            print(os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"]))
+            Path(os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"])).mkdir(
+                parents=True,
+                exist_ok=True
+            )
+            
             cwd_ = os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"],
                                 "user_" + str(asana_api_user_gid) if not isinstance(asana_api_user_gid, str) else
                                 "user_" + asana_api_user_gid)
