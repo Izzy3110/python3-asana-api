@@ -1,0 +1,76 @@
+import sys
+
+import requests
+
+
+class RequestsApi:
+    providers = {
+        "asana": "https://app.asana.com/api/1.0",
+        "github": "https://api.github.com"
+    }
+
+    token_type = "Bearer"
+    personal_access_token = None
+
+    def __init__(self, provider_name, **kwargs):
+        pat = kwargs["token"] if "token" in kwargs.keys() else None
+        if pat is None:
+            print("invalid pat")
+            sys.exit(1)
+        self.personal_access_token = pat
+        self.provider_name = provider_name
+        if provider_name in self.providers.keys():
+            self.base_url = self.providers[self.provider_name]
+            """
+            print("------------------------------------------------------------------------")
+            print("provider:")
+            print("  provider: " + self.provider_name)
+            print("  base    : " + self.base_url)
+            print("  token   : " + self.personal_access_token)
+            print("------------------------------------------------------------------------")
+            print()
+            """
+            self.session = requests.Session()
+            self.session.headers = self.mkheader()
+            for arg in kwargs:
+                if isinstance(kwargs[arg], dict):
+                    kwargs[arg] = self.__deep_merge(getattr(self.session, arg), kwargs[arg])
+                setattr(self.session, arg, kwargs[arg])
+
+    def mkheader(self):
+        return {
+            "Accept": "application/json",
+            "Authorization": self.token_type+" "+self.personal_access_token
+        }
+
+    def request(self, method, url, **kwargs):
+        return self.session.request(method, self.base_url+url, **kwargs)
+
+    def head(self, url, **kwargs):
+        return self.session.head(self.base_url+url, **kwargs)
+
+    def get(self, url, **kwargs):
+        print(self.base_url+url)
+        return self.session.get(self.base_url+url, **kwargs)
+
+    def post(self, url, **kwargs):
+        return self.session.post(self.base_url+url, **kwargs)
+
+    def put(self, url, **kwargs):
+        return self.session.put(self.base_url+url, **kwargs)
+
+    def patch(self, url, **kwargs):
+        return self.session.patch(self.base_url+url, **kwargs)
+
+    def delete(self, url, **kwargs):
+        return self.session.delete(self.base_url+url, **kwargs)
+
+    @staticmethod
+    def __deep_merge(source, destination):
+        for key, value in source.items():
+            if isinstance(value, dict):
+                node = destination.setdefault(key, {})
+                RequestsApi.__deep_merge(value, node)
+            else:
+                destination[key] = value
+        return destination
