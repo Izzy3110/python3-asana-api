@@ -11,6 +11,8 @@ class Keys(object):
 
     def __init__(self, key_file, input_pass, key_length=None):
         self.key_password = input_pass
+        print("len: "+str(key_length))
+        print("pass: "+str(input_pass))
         if not os.path.isfile(key_file):
             self.write_key(input_pass, self.default_key_length if key_length is None else key_length)
         self.key = self.load_key(filename=key_file, passphrase=input_pass)
@@ -31,7 +33,9 @@ class Keys(object):
     def decrypt_message(self, encrypted_message):
         return PKCS1_OAEP.new(self.key).decrypt(encrypted_message).decode("utf-8")
 
-    def write_key(self, filename, passphrase, key_size):
+    def write_key(self, filename, passphrase, key_size=None):
+        if key_size is None:
+            key_size = self.default_key_length
         if not os.path.isfile(filename):
             with open(filename, 'wb') as f:
                 f.write(RSA.generate(key_size).export_key('PEM', passphrase=passphrase))
