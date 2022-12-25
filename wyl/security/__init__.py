@@ -40,7 +40,7 @@ class Keys(object):
     def write_key(self):
         if self.key_length is None:
             self.key_length = self.default_key_length
-        print("file: "+str(self.key_file))
+
         if not os.path.isfile(self.key_file):
             with open(self.key_file, 'wb') as f:
                 f.write(RSA.generate(self.key_length).export_key(self.key_format, passphrase=self.key_password))
