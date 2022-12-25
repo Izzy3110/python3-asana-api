@@ -29,7 +29,10 @@ class AsanaAPI(object):
 
         me = self.user_api.get_me()
         asana_api_user_gid = str(me["gid"])
-
+        if not os.path.isdir("data"):
+            os.mkdir("data")
+        print(os.getcwd())
+        print(os.listdir("."))
         if "api." + self.provider_name in config.keys():
             cwd_ = os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"],
                                 "user_" + str(asana_api_user_gid) if not isinstance(asana_api_user_gid, str) else
