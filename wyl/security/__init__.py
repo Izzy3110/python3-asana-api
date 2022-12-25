@@ -5,17 +5,21 @@ from Crypto.PublicKey import RSA
 
 class Keys(object):
     key_filename = "mykey.pem"
-    key_password = None
-
     default_key_length = 4096
+    key_format = 'PEM'
+
+    key_password = None
+    key = None
+    key_file = None
+    key_length = None
 
     def __init__(self, key_file, input_pass, key_length=None):
         self.key_password = input_pass
-        print("len: "+str(key_length))
-        print("pass: "+str(input_pass))
-        if not os.path.isfile(key_file):
-            self.write_key(input_pass, self.default_key_length if key_length is None else key_length)
-        self.key = self.load_key(filename=key_file, passphrase=input_pass)
+        self.key_file = key_file
+        self.key_length = key_length
+        if not os.path.isfile(self.key_file):
+            self.write_key()
+        self.key = self.load_key(filename=self.key_file, passphrase=self.key_password)
         super(Keys, self).__init__()
 
     def get_user_key(self, filename, input_pass) -> RSA.RsaKey:
@@ -33,12 +37,13 @@ class Keys(object):
     def decrypt_message(self, encrypted_message):
         return PKCS1_OAEP.new(self.key).decrypt(encrypted_message).decode("utf-8")
 
-    def write_key(self, filename, passphrase, key_size=None):
-        if key_size is None:
-            key_size = self.default_key_length
-        if not os.path.isfile(filename):
-            with open(filename, 'wb') as f:
-                f.write(RSA.generate(key_size).export_key('PEM', passphrase=passphrase))
+    def write_key(self):
+        if self.key_length is None:
+            self.key_length = self.default_key_length
+
+        if not os.path.isfile(self.key_file):
+            with open(self.key_file, 'wb') as f:
+                f.write(RSA.generate(self.key_length).export_key(self.key_format, passphrase=self.key_password))
                 f.close()
 
     def load_key(self, filename, passphrase):

@@ -50,7 +50,6 @@ class RequestsApi:
         return self.session.head(self.base_url+url, **kwargs)
 
     def get(self, url, **kwargs):
-        print(self.base_url+url)
         return self.session.get(self.base_url+url, **kwargs)
 
     def post(self, url, **kwargs):
