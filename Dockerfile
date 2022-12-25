@@ -1,2 +1,2 @@
-FROM debian-latest
+FROM alpine
 CMD ["/bin/sh", "-c", "echo 'It works!'"]
