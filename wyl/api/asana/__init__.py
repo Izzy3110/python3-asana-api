@@ -48,7 +48,7 @@ class AsanaAPI(object):
                 parents=True,
                 exist_ok=True
             )
-            
+
             cwd_ = os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"],
                                 "user_" + str(asana_api_user_gid) if not isinstance(asana_api_user_gid, str) else
                                 "user_" + asana_api_user_gid)
