@@ -33,7 +33,17 @@ class AsanaAPI(object):
             os.mkdir("data")
         print(os.getcwd())
         print(os.listdir("."))
+        print(os.listdir("./data"))
+        print(os.path.join(os.getcwd(), "data"))
+        print(os.listdir(os.path.join(os.getcwd(), "data")))
+
+        cwd_1 = os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"],
+                            "user_" + str(asana_api_user_gid) if not isinstance(asana_api_user_gid, str) else
+                            "user_" + asana_api_user_gid)
+        print(cwd_1)
+
         if "api." + self.provider_name in config.keys():
+            print(os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"]))
             cwd_ = os.path.join(os.getcwd(), config["api." + self.provider_name]["file_basepath"],
                                 "user_" + str(asana_api_user_gid) if not isinstance(asana_api_user_gid, str) else
                                 "user_" + asana_api_user_gid)
